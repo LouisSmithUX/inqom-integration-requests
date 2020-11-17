@@ -13,7 +13,7 @@ page = client.get_block("https://www.notion.so/inqom/6e6f8425d65641a59c8757d6c45
 
 @app.route('/addRow', methods=['POST'])
 def post():
-    json_data = flask.request.json
+    json_data = request.json
 
     # Return the response in json format
     return jsonify(response)
