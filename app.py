@@ -1,23 +1,28 @@
 # app.py
-from flask import Flask
-# import json
+from flask import Flask,request
+import json
 from notion.client import NotionClient
 app = Flask(__name__)
 
 
-# Obtain the `token_v2` value by inspecting your browser cookies on a logged-in (non-guest) session on Notion.so
-client = NotionClient(token_v2="8ccf0781da8e353a657cc539ae2dfeda1d770925789def42cb7fc13701a592819c15dd26a67102c4fe7513c0551eddbce1c1abe0752aa70d4af5f4f7279314ec51f267262c777860756cf9dd80ea")
-
-# Replace this URL with the URL of the page you want to edit
-page = client.get_block("https://www.notion.so/inqom/6e6f8425d65641a59c8757d6c45dfd3f?v=64a21046becb448195a529b7c2da2447")
-
-
 @app.route('/addRow', methods=['POST'])
 def post():
-    json_data = Flask.request.json
+    json_data = request.json
+
+    print(json_data)
+
+    # Obtain the `token_v2` value by inspecting your browser cookies on a logged-in (non-guest) session on Notion.so
+    client = NotionClient(token_v2="8ccf0781da8e353a657cc539ae2dfeda1d770925789def42cb7fc13701a592819c15dd26a67102c4fe7513c0551eddbce1c1abe0752aa70d4af5f4f7279314ec51f267262c777860756cf9dd80ea")
+    cv = client.get_collection_view("https://www.notion.so/inqom/6e6f8425d65641a59c8757d6c45dfd3f?v=64a21046becb448195a529b7c2da2447")
+
+    row = cv.collection.add_row()
+    row.name = json_data['name']
+    row.profil = json.dumps(json_data['profil'])
+    row.integration_demandee = json_data['integration_demandee']
+    row.explications = json_data['explications']
 
     # Return the response in json format
-    return json_data
+    return json.dumps({'success':True}), 204, {'ContentType':'application/json'} 
 
 
 # A welcome message to test our server
